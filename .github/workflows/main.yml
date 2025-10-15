@@ -1,0 +1,30 @@
+name: eShopOnWeb Build and Test
+
+on: [push, pull_request, workflow_dispatch]
+
+# Blocco 'env' aggiunto come richiesto
+env:
+  RESOURCE-GROUP: rg-eshoponweb-NAME
+  LOCATION: francecentral
+  TEMPLATE-FILE: infra/webapp.bicep
+  SUBSCRIPTION-ID: 2f5761e5-14b2-4621-b17a-e486d897731b
+  WEBAPP-NAME: test1real
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '8.0.x'
+        include-prerelease: true
+
+    - name: Build with dotnet
+      run: dotnet build ./eShopOnWeb.sln --configuration Release
+    
+    - name: Test with dotnet
+      run: dotnet test ./eShopOnWeb.sln --configuration Release
